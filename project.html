@@ -1,0 +1,26 @@
+<script>
+var importObject = {
+		env: {
+			memoryBase: 0,
+			tableBase: 0,
+			setTempRet0:(x)=>{},
+			memory: new WebAssembly.Memory({ initial:256 }),
+			table: new WebAssembly.Table({ initial:0, element:'anyfunc' })
+		}
+	};
+
+	fetch('http://localhost:9000/assets/wasm/project/project.wasm').then(
+		response => response.arrayBuffer()
+	).then(
+		bytes => WebAssembly.instantiate(bytes, importObject)
+	).then(
+		results => {
+			let module=results.instance
+			let exports=module.exports
+			let addr=exports._addr
+			console.log(addr(0))
+			console.log(addr(1))
+			console.log(addr(2))
+		}
+	)
+</script>
